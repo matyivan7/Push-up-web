@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "push_up_user")
 public class User {
 
     @Id

@@ -19,7 +19,7 @@ public class PushUpSession {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private int pushUpCount;
+    private Integer pushUpCount;
 
     private String comment;
 
