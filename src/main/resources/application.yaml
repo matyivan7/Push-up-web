@@ -1,9 +1,9 @@
 spring:
   datasource:
     username: sa
-    url: jdbc:h2:mem:pushupdb
+    url: jdbc:h2:file:./data/pushupdb
     driverClassName: org.h2.Driver
-    password: ''
+    password: pa
   h2:
     console:
       enabled: 'true'

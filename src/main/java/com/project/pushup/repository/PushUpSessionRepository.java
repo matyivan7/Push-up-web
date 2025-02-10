@@ -13,6 +13,6 @@ public interface PushUpSessionRepository extends JpaRepository<PushUpSession, Lo
 
     List<PushUpSession> findByUser(User user);
 
-    @Query("SELECT FUNCTION('DATE', p.timestamp) as date, SUM(p.count) as total FROM PushUpSession p WHERE p.user = :user AND p.timestamp >= :start GROUP BY FUNCTION('DATE', p.timestamp)")
-    List<Object[]> findDailyTotals(@Param("user") User user, @Param("start") LocalDateTime start);
+//    @Query("SELECT FUNCTION('DATE', p.timestamp) as date, SUM(p.count) as total FROM PushUpSession p WHERE p.user = :user AND p.timestamp >= :start GROUP BY FUNCTION('DATE', p.timestamp)")
+//    List<Object[]> findDailyTotals(@Param("user") User user, @Param("start") LocalDateTime start);
 }
