@@ -10,12 +10,12 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const credentials = login(username, password);
         try {
-            await credentials;
+            const credentials = {username, password};
+            await login(credentials);
             navigate('/dashboard');
         } catch (error) {
-            setError("Login failed, please try again");
+            setError(error.message || "Login failed, please try again");
         }
     };
 
