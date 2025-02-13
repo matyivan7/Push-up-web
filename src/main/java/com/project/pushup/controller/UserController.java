@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         log.info("Registration endpoint reached");
 
         try {
