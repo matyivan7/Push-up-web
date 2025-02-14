@@ -2,6 +2,7 @@ package com.project.pushup.controller;
 
 import com.project.pushup.entity.PushUpSession;
 import com.project.pushup.service.PushUpSessionService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/push-up")
 public class PushUpSessionController {
 
-    private static final Logger log = LogManager.getLogger(PushUpSessionController.class);
     private final PushUpSessionService pushUpSessionService;
 
     @Autowired

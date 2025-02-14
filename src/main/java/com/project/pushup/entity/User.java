@@ -1,6 +1,7 @@
 package com.project.pushup.entity;
 
 
+import com.project.pushup.dto.UserCreationDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +30,10 @@ public class User {
     private String password;
 
     private String userRole = "USER";
+
+    public User(UserCreationDTO userCreationDTO) {
+        this.username = userCreationDTO.getUsername();
+        this.password = userCreationDTO.getPassword();
+        this.userRole = "USER";
+    }
 }

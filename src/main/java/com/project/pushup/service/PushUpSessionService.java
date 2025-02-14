@@ -4,6 +4,7 @@ import com.project.pushup.entity.PushUpSession;
 import com.project.pushup.entity.User;
 import com.project.pushup.repository.PushUpSessionRepository;
 import com.project.pushup.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class PushUpSessionService {
 
-    private static final Logger log = LogManager.getLogger(PushUpSessionService.class);
     private final PushUpSessionRepository pushUpSessionRepository;
     private final UserRepository userRepository;
 

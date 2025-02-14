@@ -1,21 +1,27 @@
 package com.project.pushup.service;
 
+import com.project.pushup.dto.PushUpUserDetails;
+import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
 import com.project.pushup.exception.UsernameAlreadyExistsException;
 import com.project.pushup.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
 
-    private static final Logger log = LogManager.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -25,8 +31,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
-        log.info("RegisterUser is called");
+    public User registerUser(UserCreationDTO userCreationDTO) {
+        log.info("RegisterUser method is called");
+
+        User user = new User(userCreationDTO);
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException("User with the given username already exists.");
@@ -34,6 +42,18 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public PushUpUserDetails loginUser() {
+        log.info("loginUser method is called");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username).orElseThrow( () -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
+
+        return new PushUpUserDetails(user);
+
     }
 
     public List<User> getAllUsers() {
