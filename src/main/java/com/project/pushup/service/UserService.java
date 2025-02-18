@@ -44,11 +44,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public PushUpUserDetails loginUser() {
+    public PushUpUserDetails loginUser(PushUpUserDetails pushUpUserDetails) {
         log.info("loginUser method is called");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = pushUpUserDetails.getUsername();
 
         User user = userRepository.findByUsername(username).orElseThrow( () -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
 

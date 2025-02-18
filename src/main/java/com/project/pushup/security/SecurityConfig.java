@@ -15,10 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -42,9 +44,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
-        http.headers()
+        http.cors()
+            .and()
+            .headers()
             .frameOptions()
-            .sameOrigin() // Allow same-origin framing (needed for H2 console)
+            .sameOrigin()
             .and()
             .csrf().disable()
             .authorizeHttpRequests((authorize)->{
@@ -56,6 +60,15 @@ public class SecurityConfig {
                 authorize.anyRequest().authenticated();
             }).httpBasic(Customizer.withDefaults());
         return http.build();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins("http://localhost:3000")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("*")
+            .allowCredentials(true);
     }
 
 //    @Bean

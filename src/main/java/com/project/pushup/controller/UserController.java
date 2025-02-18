@@ -40,12 +40,12 @@ public class UserController {
     }
 
     @PreAuthorize("permitAll")
-    @GetMapping("/login")
-    public ResponseEntity<PushUpUserDetails> login() {
+    @PostMapping("/login")
+    public ResponseEntity<PushUpUserDetails> login(@RequestBody PushUpUserDetails pushUpUserDetails) {
         log.info("Login endpoint reached");
 
         try {
-            PushUpUserDetails loggedInUserDetails = userService.loginUser();
+            PushUpUserDetails loggedInUserDetails = userService.loginUser(pushUpUserDetails);
             return ResponseEntity.ok(loggedInUserDetails);
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().build();
