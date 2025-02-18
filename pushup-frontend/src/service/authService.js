@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:8080/push-up";
 
-const register = async (userData) => {
-    const response = await fetch('${API_URL}/register', {
+const registerHandle = async (userData) => {
+    const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -16,8 +16,8 @@ const register = async (userData) => {
 };
 
 const login = async (credentials) => {
-    const response = await fetch('${API_URL}/login', {
-        method: 'POST   ',
+    const response = await fetch(`${API_URL}/login`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -30,4 +30,4 @@ const login = async (credentials) => {
     return response.json();
 };
 
-export { login, register };
+export { login, registerHandle };

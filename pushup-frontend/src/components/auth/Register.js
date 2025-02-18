@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import authService from './service/auth.service';
+import {registerHandle} from '../../service/authService';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -11,7 +11,8 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await authService.register(username, password);
+            const userData = { username, password };
+            await registerHandle(userData);
             navigate('/login');
         } catch (error) {
             setError("Registration failed, please try again");
