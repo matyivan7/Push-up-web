@@ -5,8 +5,6 @@ import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
 import com.project.pushup.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
