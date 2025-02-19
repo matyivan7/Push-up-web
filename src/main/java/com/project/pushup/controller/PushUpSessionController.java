@@ -1,5 +1,7 @@
 package com.project.pushup.controller;
 
+import com.project.pushup.dto.PushUpSessionCreationDTO;
+import com.project.pushup.dto.PushUpSessionOverviewDTO;
 import com.project.pushup.entity.PushUpSession;
 import com.project.pushup.service.PushUpSessionService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +24,10 @@ public class PushUpSessionController {
     }
 
     @PostMapping("/new-session")
-    public ResponseEntity<PushUpSession> createPushUpSession(@RequestBody PushUpSession session) {
+    public ResponseEntity<PushUpSession> createPushUpSession(@RequestBody PushUpSessionCreationDTO pushUpSessionCreationDTO) {
         log.info("Create session endpoint reached");
 
-        PushUpSession savedSession = pushUpSessionService.createPushUpSession(session);
+        PushUpSession savedSession = pushUpSessionService.createPushUpSession(pushUpSessionCreationDTO);
         return ResponseEntity.ok(savedSession);
     }
 
@@ -43,6 +45,14 @@ public class PushUpSessionController {
 
         List<PushUpSession> allSessions = pushUpSessionService.getAllSessions();
         return ResponseEntity.ok(allSessions);
+    }
+
+    @GetMapping
+    public ResponseEntity<PushUpSessionOverviewDTO> getPushUpSessionOverview() {
+        log.info("Get push up session overview endpoint reached");
+
+        PushUpSessionOverviewDTO pushUpSessionOverviewDTO = pushUpSessionService.getPushUpSessionOverview();
+        return ResponseEntity.ok(pushUpSessionOverviewDTO);
     }
 
 //    @GetMapping("/summary")

@@ -1,5 +1,6 @@
 package com.project.pushup.entity;
 
+import com.project.pushup.dto.PushUpSessionCreationDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,10 @@ public class PushUpSession {
     private String comment;
 
     private LocalDateTime timeStamp;
+
+    public PushUpSession(PushUpSessionCreationDTO pushUpSessionCreationDTO) {
+        this.pushUpCount = pushUpSessionCreationDTO.getPushUpCount();
+        this.comment = pushUpSessionCreationDTO.getComment();
+        this.timeStamp = pushUpSessionCreationDTO.getTimeStamp();
+    }
 }

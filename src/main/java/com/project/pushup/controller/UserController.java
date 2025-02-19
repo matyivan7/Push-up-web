@@ -1,6 +1,6 @@
 package com.project.pushup.controller;
 
-import com.project.pushup.dto.PushUpUserDetails;
+import com.project.pushup.dto.PushUpUserDetailsDTO;
 import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
 import com.project.pushup.service.UserService;
@@ -39,11 +39,11 @@ public class UserController {
 
     @PreAuthorize("permitAll")
     @PostMapping("/login")
-    public ResponseEntity<PushUpUserDetails> login(@RequestBody PushUpUserDetails pushUpUserDetails) {
+    public ResponseEntity<PushUpUserDetailsDTO> login(@RequestBody PushUpUserDetailsDTO pushUpUserDetailsDTO) {
         log.info("Login endpoint reached");
 
         try {
-            PushUpUserDetails loggedInUserDetails = userService.loginUser(pushUpUserDetails);
+            PushUpUserDetailsDTO loggedInUserDetails = userService.loginUser(pushUpUserDetailsDTO);
             return ResponseEntity.ok(loggedInUserDetails);
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().build();

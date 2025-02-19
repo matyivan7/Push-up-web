@@ -1,6 +1,6 @@
 package com.project.pushup.service;
 
-import com.project.pushup.dto.PushUpUserDetails;
+import com.project.pushup.dto.PushUpUserDetailsDTO;
 import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
 import com.project.pushup.exception.UsernameAlreadyExistsException;
@@ -40,14 +40,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public PushUpUserDetails loginUser(PushUpUserDetails pushUpUserDetails) {
+    public PushUpUserDetailsDTO loginUser(PushUpUserDetailsDTO pushUpUserDetailsDTO) {
         log.info("loginUser method is called");
 
-        String username = pushUpUserDetails.getUsername();
+        String username = pushUpUserDetailsDTO.getUsername();
 
         User user = userRepository.findByUsername(username).orElseThrow( () -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
 
-        return new PushUpUserDetails(user);
+        return new PushUpUserDetailsDTO(user);
 
     }
 
