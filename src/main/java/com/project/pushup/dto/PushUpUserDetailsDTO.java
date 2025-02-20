@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PushUpUserDetails {
+public class PushUpUserDetailsDTO {
 
     private String username;
 
@@ -16,7 +16,7 @@ public class PushUpUserDetails {
 
     private String userRole;
 
-    public PushUpUserDetails(User user) {
+    public PushUpUserDetailsDTO(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.userRole =  "USER";
