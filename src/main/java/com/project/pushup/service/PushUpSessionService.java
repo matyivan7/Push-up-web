@@ -100,6 +100,7 @@ public class PushUpSessionService {
         String username = authentication.getName();
 
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
+//        return new User(4L, "Máté", "1234", "USER");
     }
 
 //    public List<Object[]> getDailyTotals() {

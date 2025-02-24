@@ -37,19 +37,18 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("permitAll")
-    @PostMapping("/login")
-    public ResponseEntity<PushUpUserDetailsDTO> login(@RequestBody PushUpUserDetailsDTO pushUpUserDetailsDTO) {
-        log.info("Login endpoint reached");
-
-        try {
-            PushUpUserDetailsDTO loggedInUserDetails = userService.loginUser(pushUpUserDetailsDTO);
-            return ResponseEntity.ok(loggedInUserDetails);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().build();
-        }
-
-    }
+//    @PreAuthorize("permitAll")
+//    @PostMapping("/login")
+//    public ResponseEntity<PushUpUserDetailsDTO> login(@RequestBody PushUpUserDetailsDTO pushUpUserDetailsDTO) {
+//        log.info("Login endpoint reached");
+//
+//        try {
+//            PushUpUserDetailsDTO loggedInUserDetails = userService.loginUser(pushUpUserDetailsDTO);
+//            return ResponseEntity.ok(loggedInUserDetails);
+//        } catch (RuntimeException ex) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
