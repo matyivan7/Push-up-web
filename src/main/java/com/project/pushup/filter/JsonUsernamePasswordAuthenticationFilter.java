@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,13 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final AuthenticationManager authenticationManager;
+
+    public JsonUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+        setFilterProcessesUrl("/login");
+    }
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException {
@@ -28,7 +36,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
                 UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(username, password);
                 setDetails(request, token);
-                return this.getAuthenticationManager().authenticate(token);
+
+                return this.authenticationManager.authenticate(token);
             } catch (IOException e) {
                 throw new AuthenticationServiceException("Unable to parse authentication request body", e);
             }

@@ -1,9 +1,10 @@
 package com.project.pushup.dto;
 
-import com.project.pushup.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,11 +15,6 @@ public class PushUpUserDetailsDTO {
 
     private String password;
 
-    private String userRole;
+    private List<String> roles;
 
-    public PushUpUserDetailsDTO(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.userRole =  "USER";
-    }
 }

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -29,11 +30,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String userRole = "USER";
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
+    private UserRoles role;
 
     public User(UserCreationDTO userCreationDTO) {
         this.username = userCreationDTO.getUsername();
         this.password = userCreationDTO.getPassword();
-        this.userRole = "USER";
     }
 }

@@ -13,3 +13,4 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:8080
