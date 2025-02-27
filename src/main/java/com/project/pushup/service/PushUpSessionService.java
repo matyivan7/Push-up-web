@@ -99,17 +99,8 @@ public class PushUpSessionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
-//        return new User(4L, "Máté", "1234", "USER");
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
     }
 
-//    public List<Object[]> getDailyTotals() {
-//        log.info("Get daily total push ups method is called");
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-//        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
-//        LocalDateTime start = LocalDateTime.now().minusDays(30);
-//        return pushUpSessionRepository.findDailyTotals(user, start);
-//    }
 }

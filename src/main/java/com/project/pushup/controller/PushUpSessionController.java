@@ -59,21 +59,4 @@ public class PushUpSessionController {
         PushUpSessionOverviewDTO pushUpSessionOverviewDTO = pushUpSessionService.getPushUpSessionOverview();
         return ResponseEntity.ok(pushUpSessionOverviewDTO);
     }
-
-//    @GetMapping("/summary")
-//    public ResponseEntity<List<Map<String, Object>>> getDailyTotal() {
-//        log.info("Get daily total sessions endpoint reached");
-//
-//        List<Object[]> dailyTotals = pushUpSessionService.getDailyTotals();
-//
-//        List<Map<String, Object>> response = dailyTotals.stream().map(record -> {
-//            Map<String, Object> dailyRecord = new HashMap<>();
-//            dailyRecord.put("date", record[0]);
-//            dailyRecord.put("total", record[1]);
-//            return dailyRecord;
-//        }).toList();
-//
-//        return ResponseEntity.ok(response);
-//    }
-
 }

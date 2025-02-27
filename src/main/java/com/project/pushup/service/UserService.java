@@ -1,6 +1,5 @@
 package com.project.pushup.service;
 
-import com.project.pushup.dto.PushUpUserDetailsDTO;
 import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
 import com.project.pushup.entity.UserRoles;

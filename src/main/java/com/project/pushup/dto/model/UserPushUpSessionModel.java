@@ -1,6 +1,5 @@
 package com.project.pushup.dto.model;
 
-import com.project.pushup.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
