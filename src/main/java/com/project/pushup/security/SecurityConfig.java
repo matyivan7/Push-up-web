@@ -1,42 +1,67 @@
 package com.project.pushup.security;
 
-import com.project.pushup.filter.JsonUsernamePasswordAuthenticationFilter;
+import com.project.pushup.entity.UserRoles;
+import com.project.pushup.service.UserService;
+import jakarta.servlet.DispatcherType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-public class SecurityConfig{
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    private final UserService userService;
+
+    @Autowired
+    public SecurityConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        JsonUsernamePasswordAuthenticationFilter jsonFilter = new JsonUsernamePasswordAuthenticationFilter();
-        jsonFilter.setAuthenticationManager(http.getSharedObject(org.springframework.security.authentication.AuthenticationManager.class));
-        jsonFilter.setFilterProcessesUrl("/push-up/login");
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf().disable()
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/push-up/register", "/push-up/login").permitAll()
-                .anyRequest().authenticated()
+            .cors(Customizer.withDefaults())
+            .csrf(AbstractHttpConfigurer::disable)
+            //permit all
+            .authorizeHttpRequests(auth -> auth
+                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE, DispatcherType.ERROR).permitAll()
+                .requestMatchers(HttpMethod.GET, "/push-up/login", "/push-up/logout", "/h2-console").permitAll()
+                .requestMatchers(HttpMethod.POST, "/push-up/register").permitAll()
             )
-            .formLogin().disable()
-            .addFilterAt(jsonFilter, UsernamePasswordAuthenticationFilter.class)
-            .logout(LogoutConfigurer::permitAll)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+            //auth
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/push-up/new-session").hasRole(UserRoles.ROLE_USER.getRole())
+                .requestMatchers(HttpMethod.GET, "/push-up/users", "/push-up/user/{id}", "/push-up/sessions",
+                    "/push-up/all-sessions", "/push-up").hasRole(UserRoles.ROLE_USER.getRole())
+            )
+            .authorizeHttpRequests(auth -> auth.anyRequest().denyAll())
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+            .logout(logout -> logout
+                .logoutUrl("/push-up/logout")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+            )
+            .userDetailsService(userService);
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 }
