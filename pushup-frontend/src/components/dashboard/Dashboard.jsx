@@ -1,33 +1,52 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {getPushUpSessionOverview} from "../../service/authService";
+import {getPushUpSessionOverview} from "../../service/pushUpService";
+import {isAuthenticated} from "../../service/authService";
 import "./dashboard.css";
 
 const Dashboard = () => {
 
     const navigate = useNavigate();
-    const [error, setError] = useState('');
-    const [userSessions, setUserSessions] = useState([]);
-    const [allSessions, setAllSessions] = useState([]);
+    const [sessionData, setSessionData] = useState([]);
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const fetchSessionOverview = async () => {
-            try {
-                const data = await getPushUpSessionOverview();
-                setUserSessions(data.userPushUpSessionModels);
-                setAllSessions(data.allPushUpSessionModels);
-            } catch (err) {
-                setError('An error occurred while fetching data');
+        const checkAuthentication = () => {
+            const authenticatedUser = isAuthenticated();
+            console.log("authenticatedUser", authenticatedUser);
+            if (!authenticatedUser) {
+                navigate("/login");
+            } else {
+                setUser(authenticatedUser);
             }
         };
 
-        fetchSessionOverview();
+        checkAuthentication();
+    }, [navigate]);
+
+    useEffect(() => {
+        const fetchSessions = async () => {
+            try {
+                const sessions = await getPushUpSessionOverview();
+                setSessionData(sessions);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+
+        fetchSessions();
     }, []);
 
     const createPushUp = async (e) => {
         e.preventDefault();
         navigate('/new-session');
     }
+
+    const userSessions = user
+        ? sessionData.filter(session => session.user.username === user.username)
+        : [];
+    const allSessions = sessionData;
 
     return (
         <div className="dashboard">

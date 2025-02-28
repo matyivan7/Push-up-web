@@ -13,7 +13,8 @@ const Login = () => {
         e.preventDefault();
         try {
             const credentials = {username, password};
-            await login(credentials);
+            const userDetails = await login(credentials);
+            console.log(userDetails);
             navigate('/dashboard');
         } catch (error) {
             setError(error.message || "Login failed, please try again");

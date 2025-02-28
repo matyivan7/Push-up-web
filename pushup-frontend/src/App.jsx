@@ -18,7 +18,7 @@ const App = ()=> {
         <Route path="/new-session" element={<PushUpForm />} />
       </Routes>
     </Router>
-  );
+  )
 }
 
 export default App;

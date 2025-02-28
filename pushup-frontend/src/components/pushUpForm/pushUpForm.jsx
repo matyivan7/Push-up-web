@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPushUp } from "../../service/authService";
+import { createPushUp } from "../../service/pushUpService";
 import "./pushUpForm.css";
 
 const PushUpForm = () => {
