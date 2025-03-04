@@ -24,7 +24,7 @@ public class PushUpSessionController {
         this.pushUpSessionService = pushUpSessionService;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/new-session")
     public ResponseEntity<PushUpSession> createPushUpSession(@RequestBody PushUpSessionCreationDTO pushUpSessionCreationDTO) {
         log.info("Create session endpoint reached");
@@ -33,7 +33,7 @@ public class PushUpSessionController {
         return ResponseEntity.ok(savedSession);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/sessions")
     public ResponseEntity<List<PushUpSession>> getSessionsForCurrentUser() {
         log.info("Get Sessions for current user endpoint reached");
@@ -42,7 +42,7 @@ public class PushUpSessionController {
         return ResponseEntity.ok(sessions);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/all-sessions")
     public ResponseEntity<List<PushUpSession>> getAllPushUpSessions() {
         log.info("Get all push up sessions endpoint reached");
@@ -51,7 +51,7 @@ public class PushUpSessionController {
         return ResponseEntity.ok(allSessions);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ResponseEntity<PushUpSessionOverviewDTO> getPushUpSessionOverview() {
         log.info("Get push up session overview endpoint reached");
