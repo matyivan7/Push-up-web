@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {getPushUpSessionOverview} from "../../service/pushUpService";
-import {isAuthenticated} from "../../service/authService";
+import {isAuthenticated, logout} from "../../service/authService";
 import "./dashboard.css";
 
 const Dashboard = () => {
@@ -14,7 +14,7 @@ const Dashboard = () => {
     useEffect(() => {
         const checkAuthentication = () => {
             const authenticatedUser = isAuthenticated();
-            console.log("authenticatedUser", authenticatedUser);
+
             if (!authenticatedUser) {
                 navigate("/login");
             } else {
@@ -38,15 +38,18 @@ const Dashboard = () => {
         fetchSessions();
     }, []);
 
+    const userSessions = sessionData?.userPushUpSessionModels || [];
+    const allSessions = sessionData?.allPushUpSessionModels || [];
+
     const createPushUp = async (e) => {
         e.preventDefault();
         navigate('/new-session');
     }
 
-    const userSessions = user
-        ? sessionData.filter(session => session.user.username === user.username)
-        : [];
-    const allSessions = sessionData;
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
     return (
         <div className="dashboard">
@@ -84,6 +87,7 @@ const Dashboard = () => {
             {error && <p className="error-message">{error}</p>}
         </div>
             <button onClick={createPushUp} className="create-session-btn">New Push-up Session</button>
+            <button onClick={handleLogout} className="logout-btn">Logout</button>
         </div>
     );
 }

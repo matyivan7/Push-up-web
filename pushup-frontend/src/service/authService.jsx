@@ -4,6 +4,7 @@ const registerHandle = async (userData) => {
     const response = await fetch(`${BASE_URL}/register`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
+        credentials: 'include',
         body: JSON.stringify(userData)
     });
 
@@ -23,6 +24,7 @@ const login = async (credentials) => {
         const response = await fetch(`${BASE_URL}/login`, {
             method: 'GET',
             headers: headers,
+            credentials: 'include'
         });
 
         if (response.ok) {
@@ -43,13 +45,20 @@ const isAuthenticated = () => {
     return user ? JSON.parse(user) : null;
 };
 
-const logout = () => {
-    localStorage.removeItem('auth');
+const logout = async (credentials) => {
+    const response = await fetch(`${BASE_URL}/logout`, {
+        method: 'GET',
+        credentials: 'include'
+    })
+
+    if (response.ok) {
+        localStorage.removeItem('auth');
+    }
 };
 
 const getAuthStatus = () => {
     const user = isAuthenticated();
-    return user !== null; // Return true if user is logged in, false otherwise
+    return user !== null;
 };
 
 export {login, registerHandle, logout, isAuthenticated, getAuthStatus};

@@ -6,7 +6,7 @@ const createPushUp = async (pushUpSessionCreationModel) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'same-origin',
+        credentials: 'include',
         body: JSON.stringify(pushUpSessionCreationModel)
     });
 
@@ -22,7 +22,7 @@ const getPushUpSessionOverview = async () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'same-origin'
+        credentials: 'include'
     });
 
     if (!response.ok) {

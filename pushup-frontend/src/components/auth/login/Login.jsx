@@ -14,7 +14,6 @@ const Login = () => {
         try {
             const credentials = {username, password};
             const userDetails = await login(credentials);
-            console.log(userDetails);
             navigate('/dashboard');
         } catch (error) {
             setError(error.message || "Login failed, please try again");
