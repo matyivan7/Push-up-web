@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {getPushUpSessionOverview} from "../../service/pushUpService";
 import {isAuthenticated, logout} from "../../service/authService";
+import Navbar from "../navbar/Navbar";
 import "./dashboard.css";
 
 const Dashboard = () => {
@@ -10,6 +11,7 @@ const Dashboard = () => {
     const [sessionData, setSessionData] = useState([]);
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
+    const [view, setView] = useState("all");
 
     useEffect(() => {
         const checkAuthentication = () => {
@@ -21,7 +23,6 @@ const Dashboard = () => {
                 setUser(authenticatedUser);
             }
         };
-
         checkAuthentication();
     }, [navigate]);
 
@@ -34,14 +35,13 @@ const Dashboard = () => {
                 setError(error.message);
             }
         };
-
         fetchSessions();
     }, []);
 
     const userSessions = sessionData?.userPushUpSessionModels || [];
     const allSessions = sessionData?.allPushUpSessionModels || [];
 
-    const createPushUp = async (e) => {
+    const handleNewSession = async (e) => {
         e.preventDefault();
         navigate('/new-session');
     }
@@ -53,43 +53,58 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-            <div className="sessions-box">
-                <h1>Your Sessions</h1>
-                <div className="session-container">
-                    {userSessions.length > 0 ? (
-                        userSessions.map((session, index) => (
-                            <div key={index} className="session-card">
-                                <p><strong>PushUp Count:</strong> {session.pushUpCount}</p>
-                                <p><strong>Comment:</strong> {session.comment}</p>
-                                <p><strong>Timestamp:</strong> {new Date(session.timeStamp).toLocaleString()}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No sessions available.</p>
-                    )}
-                </div>
+            <Navbar
+                user={user}
+                onViewChange={setView}
+                onLogout={handleLogout}
+            />
 
-                <h1>All Sessions</h1>
-                <div className="session-container">
-                    {allSessions.length > 0 ? (
-                        allSessions.map((session, index) => (
-                            <div key={index} className="session-card">
-                                <p><strong>User:</strong> {session.user.username}</p>
-                                <p><strong>PushUp Count:</strong> {session.pushUpCount}</p>
-                                <p><strong>Comment:</strong> {session.comment}</p>
-                                <p><strong>Timestamp:</strong> {new Date(session.timeStamp).toLocaleString()}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No sessions available.</p>
-                    )}
-                </div>
-            {error && <p className="error-message">{error}</p>}
-        </div>
-            <button onClick={createPushUp} className="create-session-btn">New Push-up Session</button>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+            <div className="sessions-box">
+                {view === "my" ? (
+                    <>
+                        <h1>Your Sessions</h1>
+                        <div className="session-container">
+                            {userSessions.length > 0 ? (
+                                userSessions.map((session, index) => (
+                                    <div key={index} className="session-card">
+                                        <p><strong>Fekvőtámasz:</strong> {session.pushUpCount}</p>
+                                        <p><strong>Komment:</strong> {session.comment}</p>
+                                        <p><strong>Dátum:</strong>
+                                            {new Date(session.timeStamp).toLocaleString()}
+                                        </p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No sessions available.</p>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <h1>All Sessions</h1>
+                        <div className="session-container">
+                            {allSessions.length > 0 ? (
+                                allSessions.map((session, index) => (
+                                    <div key={index} className="session-card">
+                                        <p><strong>Felhasználó:</strong> {session.user.username}</p>
+                                        <p><strong>Fekvőtámasz:</strong> {session.pushUpCount}</p>
+                                        <p><strong>Komment:</strong> {session.comment}</p>
+                                        <p><strong>Dátum:</strong>
+                                            {new Date(session.timeStamp).toLocaleString()}
+                                        </p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No sessions available.</p>
+                            )}
+                        </div>
+                    </>
+                )}
+
+                {error && <p className="error-message">{error}</p>}
+            </div>
         </div>
     );
-}
+};
 
 export default Dashboard;

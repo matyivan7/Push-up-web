@@ -59,6 +59,7 @@ const PushUpForm = () => {
 
                 {error && <p className="error-message">{error}</p>}
 
+                <button onClick={navigate("/dashboard")} className="logout-btn">Back</button>
                 <button type="submit" className="submit-btn">Submit</button>
             </form>
         </div>
