@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createPushUp } from "../../service/pushUpService";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {createPushUp} from "../../service/pushUpService";
 import "./pushUpForm.css";
 
 const PushUpForm = () => {
@@ -13,8 +13,13 @@ const PushUpForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!pushUpCount || !comment) {
+        if (!pushUpCount) {
             setError("Please fill in all the fields");
+            return;
+        }
+
+        if (pushUpCount <= 0) {
+            setError("Push-up count must be greater than 0");
             return;
         }
 
@@ -31,6 +36,11 @@ const PushUpForm = () => {
             setError("Failed to create push-up session. Please try again.");
         }
     };
+
+    const handleBack = async (e) => {
+        e.preventDefault();
+        navigate("/dashboard");
+    }
 
     return (
         <div className="push-up-form">
@@ -59,7 +69,7 @@ const PushUpForm = () => {
 
                 {error && <p className="error-message">{error}</p>}
 
-                <button onClick={navigate("/dashboard")} className="logout-btn">Back</button>
+                <button onClick={handleBack} className="logout-btn">Back</button>
                 <button type="submit" className="submit-btn">Submit</button>
             </form>
         </div>

@@ -45,7 +45,7 @@ const isAuthenticated = () => {
     return user ? JSON.parse(user) : null;
 };
 
-const logout = async (credentials) => {
+const logout = async () => {
     const response = await fetch(`${BASE_URL}/logout`, {
         method: 'GET',
         credentials: 'include'
@@ -56,9 +56,5 @@ const logout = async (credentials) => {
     }
 };
 
-const getAuthStatus = () => {
-    const user = isAuthenticated();
-    return user !== null;
-};
 
-export {login, registerHandle, logout, isAuthenticated, getAuthStatus};
+export {login, registerHandle, logout, isAuthenticated};
