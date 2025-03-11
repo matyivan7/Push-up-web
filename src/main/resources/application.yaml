@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://postgres.railway.internal:5432/railway
+    username: postgres
+    password: ggAISIteUcANVHsEYMXObJKChLeEaciX
     driver-class-name: org.postgresql.Driver
   application:
     name: pushup
