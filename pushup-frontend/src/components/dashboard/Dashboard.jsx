@@ -68,7 +68,9 @@ const Dashboard = () => {
                                 userSessions.map((session, index) => (
                                     <div key={index} className="session-card">
                                         <p><strong>Fekvőtámasz:</strong> {session.pushUpCount}</p>
-                                        <p><strong>Komment:</strong> {session.comment}</p>
+                                        {session.comment && session.comment.trim() !== "" && (
+                                            <p><strong>Komment:</strong> {session.comment}</p>
+                                        )}
                                         <p><strong>Dátum:</strong>
                                             {new Date(session.timeStamp).toLocaleString()}
                                         </p>
@@ -88,8 +90,10 @@ const Dashboard = () => {
                                     <div key={index} className="session-card">
                                         <p><strong>Felhasználó:</strong> {session.user.username}</p>
                                         <p><strong>Fekvőtámasz:</strong> {session.pushUpCount}</p>
-                                        <p><strong>Komment:</strong> {session.comment}</p>
-                                        <p><strong>Dátum:</strong>
+                                        {session.comment && session.comment.trim() !== "" && (
+                                            <p><strong>Komment:</strong> {session.comment}</p>
+                                        )}
+                                        <p><strong>Dátum: </strong>
                                             {new Date(session.timeStamp).toLocaleString()}
                                         </p>
                                     </div>
