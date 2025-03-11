@@ -1,4 +1,4 @@
-const BASE_URL = "push-up-web.railway.internal";
+const BASE_URL = "push-up-web-production.up.railway.app";
 
 const registerHandle = async (userData) => {
     const response = await fetch(`${BASE_URL}/register`, {
