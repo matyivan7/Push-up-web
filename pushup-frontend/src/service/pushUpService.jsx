@@ -1,4 +1,4 @@
-const API_URL = "push-up-web-production.up.railway.app";
+const API_URL = "https://push-up-web-production.up.railway.app";
 
 const createPushUp = async (pushUpSessionCreationModel) => {
     const response = await fetch(`${API_URL}/new-session`, {
