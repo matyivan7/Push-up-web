@@ -1,16 +1,13 @@
 spring:
   datasource:
-    username: sa
-    url: jdbc:h2:file:./data/pushupdb
-    driverClassName: org.h2.Driver
-    password: pa
-  h2:
-    console:
-      enabled: 'true'
+    url: ${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   application:
     name: pushup
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:8080, http://[::1]:3000/
+cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:8080, http://[::1]:3000/, https://push-up-5wnph8og8-matyivans-projects.vercel.app/, https://push-up-web.vercel.app/
