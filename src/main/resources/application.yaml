@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: metro.proxy.rlwy.net:55551
+    url: postgresql://postgres:ggAISIteUcANVHsEYMXObJKChLeEaciX@postgres.railway.internal:5432/railway
     username: postgres
     password: ggAISIteUcANVHsEYMXObJKChLeEaciX
     driver-class-name: org.postgresql.Driver
