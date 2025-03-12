@@ -49,7 +49,7 @@ public class SecurityConfig {
                     "/push-up/all-sessions", "/push-up").hasRole(UserRoles.ROLE_USER.getRole())
             )
             .authorizeHttpRequests(auth -> auth.anyRequest().denyAll())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .logout(logout -> logout
                 .logoutUrl("/push-up/logout")
                 .deleteCookies("JSESSIONID")
