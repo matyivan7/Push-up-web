@@ -55,6 +55,8 @@ public class UserService implements UserDetailsService {
 
         String role = user.getRole().toString();
 
+        log.info(user.getUsername(), user.getRole());
+
         return org.springframework.security.core.userdetails.User
             .withUsername(user.getUsername())
             .authorities(AuthorityUtils.createAuthorityList(role))
