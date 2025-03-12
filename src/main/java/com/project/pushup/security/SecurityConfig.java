@@ -38,7 +38,7 @@ public class SecurityConfig {
         http
             .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
-            .httpBasic(withDefaults())
+//            .httpBasic(withDefaults())
             .headers(headers -> headers
                 .cacheControl(withDefaults())
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
