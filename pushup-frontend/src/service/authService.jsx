@@ -15,16 +15,19 @@ const registerHandle = async (userData) => {
 };
 
 const login = async (credentials) => {
-    const headers = credentials ? {
-            Authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password),
-        }
-        : {};
+    // const headers = credentials ? {
+    //         Authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password),
+    //     }
+    //     : {};
 
     try {
         const response = await fetch(`${BASE_URL}/login`, {
             method: 'GET',
-            headers: headers,
-            credentials: 'include'
+            headers: {
+                Authorization: `Basic ${btoa(credentials.username + ':' + credentials.password)}`
+            },
+            credentials: 'include',
+            mode: 'cors'
         });
 
         if (response.ok) {
