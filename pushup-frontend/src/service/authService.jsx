@@ -31,9 +31,9 @@ const login = async (credentials) => {
         }
 
         const data = await response.json();
-        localStorage.setItem("jwt", data.token);
 
-        return response.json();
+        localStorage.setItem("jwt", data.token);
+        return data;
 
     } catch (error) {
         console.error('Login error:', error);
