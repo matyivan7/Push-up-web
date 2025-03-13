@@ -1,6 +1,5 @@
 package com.project.pushup.security;
 
-import com.project.pushup.entity.UserRoles;
 import com.project.pushup.service.UserService;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -36,40 +33,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(withDefaults())
+            .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
-            .httpBasic(withDefaults())
-            .headers(headers -> headers
-                .cacheControl(withDefaults())
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                .httpStrictTransportSecurity(hsts -> hsts
-                    .maxAgeInSeconds(31536000)
-                    .includeSubDomains(true))
-            )
-            //permit all
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE, DispatcherType.ERROR).permitAll()
-                .requestMatchers(HttpMethod.GET, "/push-up/login", "/push-up/logout", "/h2-console").permitAll()
-                .requestMatchers(HttpMethod.POST, "/push-up/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/push-up/register", "/push-up/login").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated()
             )
-            //auth
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/push-up/new-session").hasRole(UserRoles.ROLE_USER.getRole())
-                .requestMatchers(HttpMethod.GET, "/push-up/users", "/push-up/user/{id}", "/push-up/sessions",
-                    "/push-up/all-sessions", "/push-up").hasRole(UserRoles.ROLE_USER.getRole())
-            )
-            .authorizeHttpRequests(auth -> auth.anyRequest().denyAll())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-            .logout(logout -> logout
-                .logoutUrl("/push-up/logout")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-            )
-            .userDetailsService(userService);
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
