@@ -30,11 +30,7 @@ const login = async (credentials) => {
             throw new Error('Invalid username or password');
         }
 
-        const data = await response.json();
-
-        console.log("Token received from backend:", data.token);
-        localStorage.setItem("jwt", data.token);
-        return data;
+        return response.json();
 
     } catch (error) {
         console.error('Login error:', error);
