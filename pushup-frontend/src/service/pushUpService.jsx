@@ -1,4 +1,5 @@
 const API_URL = "https://push-up-web-production.up.railway.app/push-up";
+// const API_URL = "http://localhost:8080/push-up";
 
 const createPushUp = async (pushUpSessionCreationModel) => {
     const response = await fetch(`${API_URL}/new-session`, {
@@ -7,6 +8,7 @@ const createPushUp = async (pushUpSessionCreationModel) => {
             'Content-Type': 'application/json',
         },
         credentials: 'include',
+        mode: 'cors',
         body: JSON.stringify(pushUpSessionCreationModel)
     });
 
@@ -22,7 +24,8 @@ const getPushUpSessionOverview = async () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include'
+        credentials: 'include',
+        mode: 'cors',
     });
 
     if (!response.ok) {

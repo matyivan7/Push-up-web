@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {getPushUpSessionOverview} from "../../service/pushUpService";
-import {isAuthenticated, logout} from "../../service/authService";
+import {logout} from "../../service/authService";
 import Navbar from "../navbar/Navbar";
 import "./dashboard.css";
 
@@ -12,19 +12,6 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [view, setView] = useState("all");
-
-    useEffect(() => {
-        const checkAuthentication = () => {
-            const authenticatedUser = isAuthenticated();
-
-            if (!authenticatedUser) {
-                navigate("/login");
-            } else {
-                setUser(authenticatedUser);
-            }
-        };
-        checkAuthentication();
-    }, [navigate]);
 
     useEffect(() => {
         const fetchSessions = async () => {
