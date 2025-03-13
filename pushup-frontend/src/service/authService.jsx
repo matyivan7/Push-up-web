@@ -1,7 +1,8 @@
-const BASE_URL = "https://push-up-web-production.up.railway.app/push-up";
+const API_URL = "https://push-up-web-production.up.railway.app/push-up";
+// const API_URL = "http://localhost:8080/push-up";
 
 const registerHandle = async (userData) => {
-    const response = await fetch(`${BASE_URL}/register`, {
+    const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         credentials: 'include',
@@ -15,49 +16,35 @@ const registerHandle = async (userData) => {
 };
 
 const login = async (credentials) => {
-    // const headers = credentials ? {
-    //         Authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password),
-    //     }
-    //     : {};
-
     try {
-        const response = await fetch(`${BASE_URL}/login`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Basic ${btoa(credentials.username + ':' + credentials.password)}`
-            },
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             credentials: 'include',
-            mode: 'cors'
+            mode: 'cors',
+            body: JSON.stringify(credentials)
         });
 
-        if (response.ok) {
-            const userDetails = await response.json();
-            localStorage.setItem('auth', JSON.stringify(userDetails));
-            return userDetails;
-        } else {
-            throw new Error('Unauthorized');
+        if (!response.ok) {
+            throw new Error('Invalid username or password');
         }
+
+        return response.json();
+
     } catch (error) {
         console.error('Login error:', error);
         throw error;
     }
-};
-
-const isAuthenticated = () => {
-    const user = localStorage.getItem('auth');
-    return user ? JSON.parse(user) : null;
-};
+ };
 
 const logout = async () => {
-    const response = await fetch(`${BASE_URL}/logout`, {
-        method: 'GET',
+    const response = await fetch(`${API_URL}/logout`, {
+        method: 'POST',
         credentials: 'include'
-    })
-
+    });
     if (response.ok) {
-        localStorage.removeItem('auth');
+        // client-side state
     }
 };
 
-
-export {login, registerHandle, logout, isAuthenticated};
+export {login, registerHandle, logout};
