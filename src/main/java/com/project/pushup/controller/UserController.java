@@ -67,8 +67,10 @@ public class UserController {
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/push-up");
-            cookie.setMaxAge(jwtService.getJwtExpirationMs() / 1000);
-            response.addCookie(cookie);
+            cookie.setMaxAge(jwtService.getJwtExpirationMs());
+            cookie.setAttribute("SameSite", "None");
+
+            response.addHeader("Set-Cookie", cookie.toString());
 
             Map<String, String> result = new HashMap<>();
             result.put("message", "Login successful");
