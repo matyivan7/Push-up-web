@@ -6,6 +6,7 @@ const registerHandle = async (userData) => {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         credentials: 'include',
+        mode: 'cors',
         body: JSON.stringify(userData)
     });
 
@@ -28,6 +29,9 @@ const login = async (credentials) => {
         if (!response.ok) {
             throw new Error('Invalid username or password');
         }
+
+        const data = await response.json();
+        localStorage.setItem("jwt", data.token);
 
         return response.json();
 
