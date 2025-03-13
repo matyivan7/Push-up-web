@@ -1,6 +1,5 @@
 package com.project.pushup.security;
 
-import com.project.pushup.entity.UserRoles;
 import com.project.pushup.service.UserService;
 import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -35,31 +35,22 @@ public class SecurityConfig {
         http
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
-            .httpBasic(Customizer.withDefaults())
-            //permit all
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE, DispatcherType.ERROR).permitAll()
-                .requestMatchers(HttpMethod.GET, "/push-up/login", "/push-up/logout", "/h2-console").permitAll()
-                .requestMatchers(HttpMethod.POST, "/push-up/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/push-up/register", "/push-up/login").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated()
             )
-            //auth
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/push-up/new-session").hasRole(UserRoles.ROLE_USER.getRole())
-                .requestMatchers(HttpMethod.GET, "/push-up/users", "/push-up/user/{id}", "/push-up/sessions",
-                    "/push-up/all-sessions", "/push-up").hasRole(UserRoles.ROLE_USER.getRole())
-            )
-            .authorizeHttpRequests(auth -> auth.anyRequest().denyAll())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-            .logout(logout -> logout
-                .logoutUrl("/push-up/logout")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-            )
-            .userDetailsService(userService);
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

@@ -55,8 +55,6 @@ public class UserService implements UserDetailsService {
 
         String role = user.getRole().toString();
 
-        log.info(user.getUsername(), user.getRole());
-
         return org.springframework.security.core.userdetails.User
             .withUsername(user.getUsername())
             .authorities(AuthorityUtils.createAuthorityList(role))
@@ -73,10 +71,8 @@ public class UserService implements UserDetailsService {
     public User findUserByUsername(String username) {
         log.info("Find user by username method is called");
 
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
             .orElseThrow( () -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
-
-        return user;
     }
 
     public Optional<User> getUserById(Long id) {

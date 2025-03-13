@@ -10,4 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:8080, http://[::1]:3000/, https://push-up-5wnph8og8-matyivans-projects.vercel.app/, https://push-up-web.vercel.app/
+cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:5173/, http://localhost:8080, http://[::1]:3000/, https://push-up-5wnph8og8-matyivans-projects.vercel.app/, https://push-up-web.vercel.app/
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  expirationMs: ${EXPIRATION_MS}

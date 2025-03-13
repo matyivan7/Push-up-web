@@ -1,20 +1,26 @@
 package com.project.pushup.controller;
 
-import com.project.pushup.dto.PushUpUserDetailsDTO;
+import com.project.pushup.dto.LoginRequest;
 import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
+import com.project.pushup.service.JwtService;
 import com.project.pushup.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,10 +28,14 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @PreAuthorize("permitAll")
@@ -41,23 +51,47 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/login")
-    public ResponseEntity<PushUpUserDetailsDTO> login() {
-        log.info("Login endpoint reached");
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), loginRequest.getPassword()
+                )
+            );
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtService.generateToken(loginRequest.getUsername());
 
-        if (authentication.getPrincipal() instanceof UserDetails loggedInUser) {
-            PushUpUserDetailsDTO loggedInUserDetails = new PushUpUserDetailsDTO();
-            loggedInUserDetails.setUsername(loggedInUser.getUsername());
-            loggedInUserDetails.setRoles(loggedInUser.getAuthorities().stream().map(Object::toString).toList());
+            Cookie cookie = new Cookie("JWT_TOKEN", jwt);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/push-up");
+            cookie.setMaxAge(jwtService.getJwtExpirationMs() / 1000);
+            response.addCookie(cookie);
 
-            return new ResponseEntity<>(loggedInUserDetails, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            Map<String, String> result = new HashMap<>();
+            result.put("message", "Login successful");
+
+            return ResponseEntity.ok(result);
+        } catch (Exception ex) {
+            log.error("Authentication failed: {}", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser(HttpServletResponse response) {
+        Cookie cookie = new Cookie("JWT_TOKEN", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/push-up");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
