@@ -22,6 +22,7 @@ const createPushUp = async (pushUpSessionCreationModel) => {
 
 const getPushUpSessionOverview = async () => {
     const token = localStorage.getItem("jwt");
+    console.log("getPushUpSessionOverview: ", token);
     const response = await fetch(`${API_URL}`, {
         method: 'GET',
         headers: {
