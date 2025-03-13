@@ -32,6 +32,7 @@ const login = async (credentials) => {
 
         const data = await response.json();
 
+        console.log("Token received from backend:", data.token);
         localStorage.setItem("jwt", data.token);
         return data;
 
