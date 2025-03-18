@@ -70,7 +70,7 @@ public class UserController {
             cookie.setMaxAge(jwtService.getJwtExpirationMs());
             cookie.setAttribute("SameSite", "None");
 
-            response.addHeader("Set-Cookie", cookie.toString());
+            response.addCookie(cookie);
 
             Map<String, String> result = new HashMap<>();
             result.put("message", "Login successful");
