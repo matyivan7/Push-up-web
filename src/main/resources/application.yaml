@@ -1,16 +1,40 @@
+#spring:
+#  datasource:
+#    url: ${DATABASE_URL}
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
+#    driver-class-name: org.postgresql.Driver
+#  application:
+#    name: pushup
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate:
+#      ddl-auto: update
+#cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:5173/, http://localhost:8080, http://[::1]:3000/, https://push-up-5wnph8og8-matyivans-projects.vercel.app/, https://push-up-web.vercel.app/
+#jwt:
+#  secret: ${JWT_SECRET_KEY}
+#  expirationMs: ${EXPIRATION_MS}
+
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:file:./data/pushupdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: pa
   application:
     name: pushup
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
 cors-policies: chrome-extension://eipdnjedkpcnlmmdfdkgfpljanehloah, http://localhost:3000, http://localhost:5173/, http://localhost:8080, http://[::1]:3000/, https://push-up-5wnph8og8-matyivans-projects.vercel.app/, https://push-up-web.vercel.app/
 jwt:
-  secret: ${JWT_SECRET_KEY}
-  expirationMs: ${EXPIRATION_MS}
+  secret: 1H9PZC391IvNS+2L46QOQmIAWsutItd/ruBFN7KdR0255nZ/JDykiOIagoTCVogXOjydq0gh5oEXeQgAJVBqcg==
+  expirationMs: 3600000

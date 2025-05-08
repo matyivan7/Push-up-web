@@ -3,6 +3,7 @@ package com.project.pushup.service;
 import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
 import com.project.pushup.entity.UserRoles;
+import com.project.pushup.exception.ResourceNotFoundException;
 import com.project.pushup.exception.UsernameAlreadyExistsException;
 import com.project.pushup.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,7 @@ public class UserService implements UserDetailsService {
         log.info("Load user by username method is called");
 
         User user = userRepository.findByUsername(username)
-            .orElseThrow( () -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
+            .orElseThrow( () -> new ResourceNotFoundException("User", "username", username));
 
         String role = user.getRole().toString();
 
@@ -72,7 +73,7 @@ public class UserService implements UserDetailsService {
         log.info("Find user by username method is called");
 
         return userRepository.findByUsername(username)
-            .orElseThrow( () -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
+            .orElseThrow( () -> new ResourceNotFoundException("User", "username", username));
     }
 
     public Optional<User> getUserById(Long id) {

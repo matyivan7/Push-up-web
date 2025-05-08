@@ -3,11 +3,14 @@ package com.project.pushup.controller;
 import com.project.pushup.dto.PushUpSessionCreationDTO;
 import com.project.pushup.dto.PushUpSessionOverviewDTO;
 import com.project.pushup.entity.PushUpSession;
+import com.project.pushup.exception.ValidationException;
 import com.project.pushup.service.PushUpSessionService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +29,13 @@ public class PushUpSessionController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/new-session")
-    public ResponseEntity<PushUpSession> createPushUpSession(@RequestBody PushUpSessionCreationDTO pushUpSessionCreationDTO) {
+    public ResponseEntity<PushUpSession> createPushUpSession(@Valid @RequestBody PushUpSessionCreationDTO pushUpSessionCreationDTO,
+                                                            BindingResult bindingResult) {
         log.info("Create session endpoint reached");
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
 
         PushUpSession savedSession = pushUpSessionService.createPushUpSession(pushUpSessionCreationDTO);
         return ResponseEntity.ok(savedSession);

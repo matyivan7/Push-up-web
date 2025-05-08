@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATTERN" value="%cyan(%d{yyyy-MM-dd HH:mm:ss}) [%green(%thread)] %highlight(%-5level) %yellow(%36.-36logger) - %msg%n"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="LOG_FILE" value="logs/application.log"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
+            <pattern>%cyan(%d{yyyy-MM-dd HH:mm:ss}) [%green(%thread)] %highlight(%-5level) %yellow(%36.-36logger) - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="info">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Application Loggers -->
+    <logger name="com.project.pushup" level="INFO"/>
+
+    <!-- Security Loggers -->
+    <logger name="com.project.pushup.security" level="INFO"/>
+
+    <!-- Spring Framework Loggers -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+
+    <!-- Hibernate Loggers -->
+    <logger name="org.hibernate" level="WARN"/>
+
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

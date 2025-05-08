@@ -3,10 +3,12 @@ package com.project.pushup.controller;
 import com.project.pushup.dto.LoginRequest;
 import com.project.pushup.dto.UserCreationDTO;
 import com.project.pushup.entity.User;
+import com.project.pushup.exception.ValidationException;
 import com.project.pushup.service.JwtService;
 import com.project.pushup.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -40,8 +43,12 @@ public class UserController {
 
     @PreAuthorize("permitAll")
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserCreationDTO user) {
+    public ResponseEntity<User> registerUser(@Valid @RequestBody UserCreationDTO user, BindingResult bindingResult) {
         log.info("Registration endpoint reached");
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
 
         try {
             User userToRegister = userService.registerUser(user);
@@ -52,7 +59,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, 
+                                             BindingResult bindingResult, 
+                                             HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

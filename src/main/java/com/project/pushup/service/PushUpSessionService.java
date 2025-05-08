@@ -6,13 +6,13 @@ import com.project.pushup.dto.model.AllPushUpSessionModel;
 import com.project.pushup.dto.model.UserPushUpSessionModel;
 import com.project.pushup.entity.PushUpSession;
 import com.project.pushup.entity.User;
+import com.project.pushup.exception.ResourceNotFoundException;
 import com.project.pushup.repository.PushUpSessionRepository;
 import com.project.pushup.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -100,7 +100,7 @@ public class PushUpSessionService {
         String username = authentication.getName();
 
         return userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User with the given username: " + username + " can not be found"));
+            .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
     }
 
 }
